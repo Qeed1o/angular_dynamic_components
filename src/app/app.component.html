@@ -6,7 +6,7 @@
         </div>
         <div class="buttons">
           <p 
-            *ngFor="let _ of _fields; index as i"
+            *ngFor="let _ of fields; index as i"
             (click)="removeComponentByIndex(i)"
           >remove {{ i }}</p>
         </div>

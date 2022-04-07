@@ -14,8 +14,17 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('dynamic', { read: ViewContainerRef })
   private viewRef: ViewContainerRef;
 
-  _fields: BasicField[];
   form: FormGroup;
+  private _fields: BasicField[] = [];
+
+  set fields(fields: BasicField[]) {
+    this._fields = fields;
+    this.buildFormGroup();
+    this.rebuildComponents();
+  }
+  get fields(): BasicField[] {
+    return this._fields;
+  }
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,11 +41,11 @@ export class AppComponent implements AfterViewInit {
 
   buildFormGroup() {
     const { controls = {}} = this.form || {};
-    const group = this._fields
+    const group = this.fields
       .filter(f => f.type !== FieldTypes.Button)
       .reduce( (acc, f) => {
         const control = controls[f.name]
-                        || new FormControl(f.value, f.validatorOrOpts, f.asyncValidator)
+          || new FormControl(f.value, f.validatorOrOpts, f.asyncValidator)
         return {
           ...acc,
           [f.name]: control
@@ -47,28 +56,24 @@ export class AppComponent implements AfterViewInit {
 
   rebuildComponents(): void {
     this.dynamicComponentsService
-      .setFields(this._fields)
+      .setFields(this.fields)
       .setViewRef(this.viewRef)
       .addComponents()
       .bindFormControls(this.form.controls);
   }
 
   addComponent() {
-    this._fields = [
-      ...this._fields,
+    this.fields = [
+      ...this.fields,
       {
         name: Math.random().toString(27),
         type: FieldTypes.Input,
       }
     ]
-    this.buildFormGroup();
-    this.rebuildComponents();
   }
 
   removeComponentByIndex(index: number) {
-    this._fields = this._fields.filter((_, idx) => index !== idx)
-    this.buildFormGroup();
-    this.rebuildComponents();
+    this.fields = this.fields.filter((_, idx) => index !== idx)
   }
 
   get jsonForm() {
