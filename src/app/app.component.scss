@@ -1,0 +1,29 @@
+.main {
+    display: grid;
+    grid-template-areas:    't t'
+                            'f v';
+
+    justify-content: space-around;
+
+    .title {
+        grid-area: t;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .variables, form {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        flex-grow: 0;
+    }
+
+    form {
+        grid-area: f;
+    }
+
+    .variables {
+        grid-area: v;
+    }
+}
