@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Inject, Injectable, Type, ViewContainerRef } from '@angular/core';
+import { ComponentFactoryResolver, ComponentRef, Inject, Injectable, ViewContainerRef } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { COMPONENTS_MAP_INJECTION_TOKEN } from '../constants';
 import { BasicField, ComponentMap } from '../models';
@@ -38,13 +38,14 @@ export class DynamicComponentsService {
     }
     bindFormControls(controls: { [key: string]: AbstractControl }) {
         for (const field of this.fields) {
-            const component = this.components[field.name];
-            // @ts-ignore
-            component.instance.control = controls[field.name]
-            // @ts-ignore
-            component.instance.data = field;
-            // @ts-ignore
-            component.instance.value = field.value;
+            const { name, ...restFieldProperties } = field;
+            const component = this.components[name];
+
+            const instance = component.instance as { [key: string]: any }            
+            instance.registerOnChange(val => controls[name].setValue(val));
+            instance.registerOnTouched(controls[name].markAsUntouched)
+            instance.value = controls[name].value;
+            instance.data = restFieldProperties;
         }
     }
 }

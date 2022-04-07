@@ -1,6 +1,6 @@
 <div class="select">
     <label [for]="data.name">{{ data.name }}</label>
-    <select [name]='data.name' [formControl]='control'>
+    <select [(ngModel)]='value'>
         <option 
             *ngFor='let opt of options'
             [value]='opt'

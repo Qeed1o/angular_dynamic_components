@@ -18,7 +18,7 @@ const fields: BasicField[] = [
   {
     name: 'age-input',
     type: FieldTypes.Input,
-    value: 1
+    value: 'test'
   },
   {
     name: 'day-select',

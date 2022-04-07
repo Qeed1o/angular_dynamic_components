@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ForminputComponent } from './components/forminput/forminput.component';
 import { FormselectComponent } from './components/formselect/formselect.component';
 import { FIELDS_INJECTION_TOKEN } from './constants';
-import { BasicField, FieldTypes, SelectField } from './models';
+import { BasicField, FieldTypes } from './models';
 import { DynamicComponentsService } from './services/DynamicFieldsService';
 
 
@@ -17,7 +17,7 @@ const ComponentsDictionary = {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit, AfterViewChecked {
+export class AppComponent implements AfterViewInit {
 
   @ViewChild('dyn', { read: ViewContainerRef })
   private viewRef: ViewContainerRef;
@@ -42,10 +42,7 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
     this.viewRef.clear();
     this.dynamicComponentsService
       .setViewRef(this.viewRef)
-      .addComponents();    
-  }
-
-  ngAfterViewChecked() {
+      .addComponents();
     this.dynamicComponentsService.bindFormControls(this.form.controls);
   }
 
