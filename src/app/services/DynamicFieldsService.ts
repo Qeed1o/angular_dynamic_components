@@ -24,7 +24,7 @@ export class DynamicComponentsService {
         this.viewRef = viewRef;
         return this;
     }
-    addComponents() {
+    addComponents(): this {
         this.viewRef.clear();
         this.components = this.fields.reduce( (all, field) => {
             const component = this.componentMap[field.type]
@@ -36,21 +36,22 @@ export class DynamicComponentsService {
                 [field.name]: createdComponent
             }
         }, {});
+        return this;
     }
-    bindFormControls(controls: { [key: string]: AbstractControl }) {
+    bindFormControls(controls: { [key: string]: AbstractControl }): this {
         for (const field of this.fields) {
-            const { name, ...restFieldProperties } = field;
-            const component = this.components[name];
+            const component = this.components[field.name];
 
             const instance = component.instance as { [key: string]: any }
             if (field.type !== FieldTypes.Button) {
-                instance.registerOnChange(val => controls[name].setValue(val));
-                instance.registerOnTouched(controls[name].markAsUntouched)
-                instance.value = controls[name].value;
+                instance.registerOnChange(val => controls[field.name].setValue(val));
+                instance.registerOnTouched(controls[field.name].markAsUntouched)
+                instance.value = controls[field.name].value;
             } else {
                 instance.onClick = (field as ButtonField).onClick;
             }
-            instance.data = restFieldProperties;
+            instance.data = field;
         }
+        return this;
     }
 }

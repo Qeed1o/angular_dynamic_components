@@ -1,9 +1,20 @@
 <div class="main">
     <h1 class='title'>test</h1>
     <form [formGroup]="form">
-        <div #dyn></div>
+        <div class="inputs">
+          <ng-template #dynamic></ng-template>
+        </div>
+        <div class="buttons">
+          <p 
+            *ngFor="let _ of _fields; index as i"
+            (click)="removeComponentByIndex(i)"
+          >remove {{ i }}</p>
+        </div>
     </form>
     <div class="variables">
-      <pre>{{ jsonForm }}</pre>
+      <pre>{{ jsonForm | json }}</pre>
+      <button (click)="addComponent()">
+        Add Component
+      </button>
     </div>
 </div>
