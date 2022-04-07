@@ -39,12 +39,10 @@ export class DynamicComponentsService {
     bindFormControls(controls: { [key: string]: AbstractControl }) {
         for (const field of this.fields) {
             const component = this.components[field.name];
-            // @ts-ignore
-            component.instance.control = controls[field.name]
-            // @ts-ignore
-            component.instance.data = field;
-            // @ts-ignore
-            component.instance.value = field.value;
+            
+            const instance = component.instance as { [key: string]: any }
+            instance.control = controls[field.name]
+            instance.data = field;
         }
     }
 }
