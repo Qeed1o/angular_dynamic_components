@@ -1,7 +1,7 @@
 import { ComponentFactoryResolver, ComponentRef, Inject, Injectable, ViewContainerRef } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { COMPONENTS_MAP_INJECTION_TOKEN } from '../constants';
-import { BasicField, ComponentMap } from '../models';
+import { BasicField, ButtonField, ComponentMap, FieldTypes } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,7 @@ export class DynamicComponentsService {
         return this;
     }
     addComponents() {
+        this.viewRef.clear();
         this.components = this.fields.reduce( (all, field) => {
             const component = this.componentMap[field.type]
             const componentFactory =
@@ -41,10 +42,14 @@ export class DynamicComponentsService {
             const { name, ...restFieldProperties } = field;
             const component = this.components[name];
 
-            const instance = component.instance as { [key: string]: any }            
-            instance.registerOnChange(val => controls[name].setValue(val));
-            instance.registerOnTouched(controls[name].markAsUntouched)
-            instance.value = controls[name].value;
+            const instance = component.instance as { [key: string]: any }
+            if (field.type !== FieldTypes.Button) {
+                instance.registerOnChange(val => controls[name].setValue(val));
+                instance.registerOnTouched(controls[name].markAsUntouched)
+                instance.value = controls[name].value;
+            } else {
+                instance.onClick = (field as ButtonField).onClick;
+            }
             instance.data = restFieldProperties;
         }
     }

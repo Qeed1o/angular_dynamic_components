@@ -6,46 +6,15 @@ import { ForminputComponent } from './components/forminput/forminput.component';
 import { FormselectComponent } from './components/formselect/formselect.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BasicField, ComponentMap, FieldTypes, SelectField } from './models';
-import { COMPONENTS_MAP_INJECTION_TOKEN, FIELDS_INJECTION_TOKEN } from './constants';
+import { ComponentMap, FieldTypes } from './models';
+import { COMPONENTS_MAP_INJECTION_TOKEN, FIELDS_INJECTION_TOKEN, InitialFields } from './constants';
+import { ButtonComponent } from './components/button/button.component';
 
 const map: ComponentMap = {
   [FieldTypes.Select]: FormselectComponent,
-  [FieldTypes.Input]: ForminputComponent
+  [FieldTypes.Input]: ForminputComponent,
+  [FieldTypes.Button]: ButtonComponent
 }
-
-const fields: BasicField[] = [
-  {
-    name: 'age-input',
-    type: FieldTypes.Input,
-    value: 'test'
-  },
-  {
-    name: 'day-select',
-    type: FieldTypes.Select,
-    options: [
-      'Понедельник',
-      'Вторник',
-      'Среда',
-      'Четверг',
-      'Пятница',
-      'Суббота',
-      'Воскресенье',
-    ],
-    value: 'Понедельник'
-  } as SelectField<string>,
-  {
-    name: 'number-select',
-    type: FieldTypes.Select,
-    options: [
-      1,
-      2,
-      3,
-      4,
-      5
-    ]
-  } as SelectField<number>,
-]
 
 @NgModule({
   declarations: [
@@ -66,7 +35,7 @@ const fields: BasicField[] = [
     },
     {
       provide: FIELDS_INJECTION_TOKEN,
-      useValue: fields 
+      useValue: InitialFields
     }
   ],
   bootstrap: [AppComponent]

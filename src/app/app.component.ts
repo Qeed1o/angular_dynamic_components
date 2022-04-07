@@ -1,5 +1,5 @@
 import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, Inject, OnInit, Type, ViewChild, ViewContainerRef, ɵComponentType } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ForminputComponent } from './components/forminput/forminput.component';
 import { FormselectComponent } from './components/formselect/formselect.component';
 import { FIELDS_INJECTION_TOKEN } from './constants';
@@ -31,15 +31,20 @@ export class AppComponent implements AfterViewInit {
   ) {
     this.dynamicComponentsService.setFields(this.fields);
 
-    const group = this.fields.reduce( (acc, f) => ({
-      ...acc,
-      [f.name]: f.value
-    }), {} )
+    const group = this.fields
+      .filter(f => f.type !== FieldTypes.Button)
+      .reduce( (acc, f) => ({
+        ...acc,
+        [f.name]: new FormControl(
+          f.value,
+          f.validatorOrOpts,
+          f.asyncValidator
+        )
+      }), {} )
     this.form = this.formBuilder.group(group)
   }
 
   ngAfterViewInit(): void {
-    this.viewRef.clear();
     this.dynamicComponentsService
       .setViewRef(this.viewRef)
       .addComponents();
@@ -47,10 +52,15 @@ export class AppComponent implements AfterViewInit {
   }
 
   get jsonForm() {
-    return JSON.stringify(this.form.value, null, 2)
-  }
-
-  onSubmit() {
-    console.log(this.form.value)
+    const controls = Object.entries(this.form.controls)
+      .reduce( (all, [key, control]) => ({
+        ...all,
+        [key]: {
+          value: control.value,
+          valid: control.valid,
+          errors: control.errors
+        }
+      }), {} )
+    return JSON.stringify(controls, null, 2)
   }
 }
