@@ -5,15 +5,18 @@
           <ng-template #dynamic></ng-template>
         </div>
         <div class="buttons">
-          <p 
+          <button 
+            mat-mini-fab
+            color="warn"
             *ngFor="let _ of fields; index as i"
             (click)="removeComponentByIndex(i)"
-          >remove {{ i }}</p>
+          ><mat-icon>delete</mat-icon>
+          </button>
         </div>
     </form>
     <div class="variables">
       <pre>{{ jsonForm | json }}</pre>
-      <button (click)="addComponent()">
+      <button mat-flat-button color='warn' (click)="addComponent()">
         Add Component
       </button>
     </div>

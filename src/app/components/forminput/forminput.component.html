@@ -1,4 +1,4 @@
-<div class="input">
-    <label [for]="data.name">{{ data.name }}</label>
-    <input [(ngModel)]='value' />
-</div>
+<mat-form-field class="input">
+    <mat-label>{{ data.name }}</mat-label>
+    <input matInput [(ngModel)]='value' />
+</mat-form-field>
